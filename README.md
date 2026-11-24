@@ -3,15 +3,8 @@
 This library provides basic building blocks for an HCL2-based
 language server in the form of a schema and a decoder.
 
-## Current Status
-
-This project is in use by the Terraform Language Server and it is designed
-to be used by any HCL2 language server, but it's still in early stage
-of development.
-
-For that reason the API is **not considered stable yet** and should not be relied upon.
-
-**Breaking changes may be introduced.**
+> [!IMPORTANT]
+> This repository is an OpenTofu-maintained fork of [`hashicorp/hcl-lang`](https://github.com/hashicorp/hcl-lang). It is maintained solely to support [`opentofu/tofu-ls`](https://github.com/opentofu/tofu-ls) and its supporting [`opentofu-schema`](https://github.com/opentofu/opentofu-schema) library. The OpenTofu team does not support this fork as a general-purpose HCL library. Other projects should not depend on it; changes and compatibility decisions are driven solely by `tofu-ls` requirements.
 
 ## What is HCL?
 
@@ -31,12 +24,12 @@ which in turn provides predictability, static early validation and more.
 
 There are other known HCL schema implementations, e.g.:
 
- - [hcl.BlockHeaderSchema](https://pkg.go.dev/github.com/hashicorp/hcl/v2#BlockHeaderSchema) + [hcl.AttributeSchema](https://pkg.go.dev/github.com/hashicorp/hcl/v2#AttributeSchema)
- - [hcldec.Spec](https://pkg.go.dev/github.com/hashicorp/hcl/v2/hcldec#Spec) (used by [Packer 1.5+](https://pkg.go.dev/github.com/hashicorp/packer@v1.6.2/hcl2template#Decodable))
- - [Terraform Plugin SDK's `helper/schema`](https://pkg.go.dev/github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema) (used by all Terraform plugins)
- - [Terraform's `configschema`](https://pkg.go.dev/github.com/hashicorp/terraform@v0.13.5/configs/configschema) (basically core's "`0.12+` understanding of `helper/schema`")
- - [Nomad's `hclspec.Spec`](https://pkg.go.dev/github.com/hashicorp/nomad/plugins/shared/hclspec#Spec) used by all Nomad plugins
- - [`gohcl`](https://pkg.go.dev/github.com/hashicorp/hcl/v2/gohcl) / struct field tags (`v1` effectively used by [Vault](https://pkg.go.dev/github.com/hashicorp/vault@v1.5.3/internalshared/configutil#SharedConfig) and [Consul](https://pkg.go.dev/github.com/hashicorp/consul@v1.8.3/acl#Policy) and `v2` by [Waypoint](https://pkg.go.dev/github.com/hashicorp/waypoint@v0.1.4/internal/config#App) and Nomad 1.0+)
+- [hcl.BlockHeaderSchema](https://pkg.go.dev/github.com/hashicorp/hcl/v2#BlockHeaderSchema) + [hcl.AttributeSchema](https://pkg.go.dev/github.com/hashicorp/hcl/v2#AttributeSchema)
+- [hcldec.Spec](https://pkg.go.dev/github.com/hashicorp/hcl/v2/hcldec#Spec) (used by [Packer 1.5+](https://pkg.go.dev/github.com/hashicorp/packer@v1.6.2/hcl2template#Decodable))
+- [Terraform Plugin SDK's `helper/schema`](https://pkg.go.dev/github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema) (used by all Terraform plugins)
+- [Terraform's `configschema`](https://pkg.go.dev/github.com/hashicorp/terraform@v0.13.5/configs/configschema) (basically core's "`0.12+` understanding of `helper/schema`")
+- [Nomad's `hclspec.Spec`](https://pkg.go.dev/github.com/hashicorp/nomad/plugins/shared/hclspec#Spec) used by all Nomad plugins
+- [`gohcl`](https://pkg.go.dev/github.com/hashicorp/hcl/v2/gohcl) / struct field tags (`v1` effectively used by [Vault](https://pkg.go.dev/github.com/hashicorp/vault@v1.5.3/internalshared/configutil#SharedConfig) and [Consul](https://pkg.go.dev/github.com/hashicorp/consul@v1.8.3/acl#Policy) and `v2` by [Waypoint](https://pkg.go.dev/github.com/hashicorp/waypoint@v0.1.4/internal/config#App) and Nomad 1.0+)
 
 These each have slightly different valid reasons to exist and they will likely
 continue to exist - i.e. no schema on that list (nor the one contained in this library)
@@ -90,7 +83,7 @@ e.g. `resource` in Terraform in itself brings `count` attribute.
 ```hcl
 resource "..." "..." {
   count = 2
-  
+
 }
 ```
 
