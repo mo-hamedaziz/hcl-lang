@@ -184,183 +184,183 @@ func TestTarget_Matches_nestedType(t *testing.T) {
 		expectedMatch bool
 	}{
 		{
-			"map index matching element type",
-			Target{Addr: varAddr("plain"), Type: cty.Map(cty.List(cty.String))},
-			LocalOrigin{
+			name:   "map index matching element type",
+			target: Target{Addr: varAddr("plain"), Type: cty.Map(cty.List(cty.String))},
+			origin: LocalOrigin{
 				Addr:        varAddr("plain", idx(cty.StringVal("k"))),
 				Constraints: OriginConstraints{{OfType: cty.List(cty.String)}},
 			},
-			true,
+			expectedMatch: true,
 		},
 		{
-			"map index with dynamic constraint",
-			Target{Addr: varAddr("plain"), Type: cty.Map(cty.List(cty.String))},
-			LocalOrigin{
+			name:   "map index with dynamic constraint",
+			target: Target{Addr: varAddr("plain"), Type: cty.Map(cty.List(cty.String))},
+			origin: LocalOrigin{
 				Addr:        varAddr("plain", idx(cty.StringVal("k"))),
 				Constraints: OriginConstraints{{OfType: cty.DynamicPseudoType}},
 			},
-			true,
+			expectedMatch: true,
 		},
 		{
-			"map index with incompatible constraint",
-			Target{Addr: varAddr("plain"), Type: cty.Map(cty.List(cty.String))},
-			LocalOrigin{
+			name:   "map index with incompatible constraint",
+			target: Target{Addr: varAddr("plain"), Type: cty.Map(cty.List(cty.String))},
+			origin: LocalOrigin{
 				Addr:        varAddr("plain", idx(cty.StringVal("k"))),
 				Constraints: OriginConstraints{{OfType: cty.Bool}},
 			},
-			false,
+			expectedMatch: false,
 		},
 		{
-			"map index with mismatching scope",
-			Target{Addr: varAddr("plain"), Type: cty.Map(cty.String), ScopeId: lang.ScopeId("variable")},
-			LocalOrigin{
+			name:   "map index with mismatching scope",
+			target: Target{Addr: varAddr("plain"), Type: cty.Map(cty.String), ScopeId: lang.ScopeId("variable")},
+			origin: LocalOrigin{
 				Addr:        varAddr("plain", idx(cty.StringVal("k"))),
 				Constraints: OriginConstraints{{OfScopeId: lang.ScopeId("local"), OfType: cty.String}},
 			},
-			false,
+			expectedMatch: false,
 		},
 		{
-			"map attribute access",
-			Target{Addr: varAddr("plain"), Type: cty.Map(cty.String)},
-			LocalOrigin{
+			name:   "map attribute access",
+			target: Target{Addr: varAddr("plain"), Type: cty.Map(cty.String)},
+			origin: LocalOrigin{
 				Addr:        varAddr("plain", attr("k")),
 				Constraints: OriginConstraints{{OfType: cty.String}},
 			},
-			true,
+			expectedMatch: true,
 		},
 		{
-			"map with numeric index",
-			Target{Addr: varAddr("plain"), Type: cty.Map(cty.String)},
-			LocalOrigin{
+			name:   "map with numeric index",
+			target: Target{Addr: varAddr("plain"), Type: cty.Map(cty.String)},
+			origin: LocalOrigin{
 				Addr:        varAddr("plain", idx(cty.NumberIntVal(0))),
 				Constraints: OriginConstraints{{OfType: cty.String}},
 			},
-			false,
+			expectedMatch: false,
 		},
 		{
-			"multiple nested steps",
-			Target{Addr: varAddr("plain"), Type: cty.Map(cty.List(cty.String))},
-			LocalOrigin{
+			name:   "multiple nested steps",
+			target: Target{Addr: varAddr("plain"), Type: cty.Map(cty.List(cty.String))},
+			origin: LocalOrigin{
 				Addr:        varAddr("plain", idx(cty.StringVal("k")), idx(cty.NumberIntVal(0))),
 				Constraints: OriginConstraints{{OfType: cty.String}},
 			},
-			true,
+			expectedMatch: true,
 		},
 		{
-			"map of any",
-			Target{Addr: varAddr("plain"), Type: cty.Map(cty.DynamicPseudoType)},
-			LocalOrigin{
+			name:   "map of any",
+			target: Target{Addr: varAddr("plain"), Type: cty.Map(cty.DynamicPseudoType)},
+			origin: LocalOrigin{
 				Addr:        varAddr("plain", idx(cty.StringVal("k")), attr("foo")),
 				Constraints: OriginConstraints{{OfType: cty.String}},
 			},
-			true,
+			expectedMatch: true,
 		},
 		{
-			"list index",
-			Target{Addr: varAddr("list"), Type: cty.List(cty.String)},
-			LocalOrigin{
+			name:   "list index",
+			target: Target{Addr: varAddr("list"), Type: cty.List(cty.String)},
+			origin: LocalOrigin{
 				Addr:        varAddr("list", idx(cty.NumberIntVal(0))),
 				Constraints: OriginConstraints{{OfType: cty.String}},
 			},
-			true,
+			expectedMatch: true,
 		},
 		{
-			"list with string index",
-			Target{Addr: varAddr("list"), Type: cty.List(cty.String)},
-			LocalOrigin{
+			name:   "list with string index",
+			target: Target{Addr: varAddr("list"), Type: cty.List(cty.String)},
+			origin: LocalOrigin{
 				Addr:        varAddr("list", idx(cty.StringVal("k"))),
 				Constraints: OriginConstraints{{OfType: cty.String}},
 			},
-			false,
+			expectedMatch: false,
 		},
 		{
-			"list attribute access",
-			Target{Addr: varAddr("list"), Type: cty.List(cty.String)},
-			LocalOrigin{
+			name:   "list attribute access",
+			target: Target{Addr: varAddr("list"), Type: cty.List(cty.String)},
+			origin: LocalOrigin{
 				Addr:        varAddr("list", attr("foo")),
 				Constraints: OriginConstraints{{OfType: cty.String}},
 			},
-			false,
+			expectedMatch: false,
 		},
 		{
-			"set index",
-			Target{Addr: varAddr("set"), Type: cty.Set(cty.String)},
-			LocalOrigin{
+			name:   "set index",
+			target: Target{Addr: varAddr("set"), Type: cty.Set(cty.String)},
+			origin: LocalOrigin{
 				Addr:        varAddr("set", idx(cty.NumberIntVal(0))),
 				Constraints: OriginConstraints{{OfType: cty.String}},
 			},
-			false,
+			expectedMatch: false,
 		},
 		{
-			"tuple index",
-			Target{Addr: varAddr("tuple"), Type: cty.Tuple([]cty.Type{cty.String, cty.Bool})},
-			LocalOrigin{
+			name:   "tuple index",
+			target: Target{Addr: varAddr("tuple"), Type: cty.Tuple([]cty.Type{cty.String, cty.Bool})},
+			origin: LocalOrigin{
 				Addr:        varAddr("tuple", idx(cty.NumberIntVal(1))),
 				Constraints: OriginConstraints{{OfType: cty.Bool}},
 			},
-			true,
+			expectedMatch: true,
 		},
 		{
-			"tuple index out of range",
-			Target{Addr: varAddr("tuple"), Type: cty.Tuple([]cty.Type{cty.String, cty.Bool})},
-			LocalOrigin{
+			name:   "tuple index out of range",
+			target: Target{Addr: varAddr("tuple"), Type: cty.Tuple([]cty.Type{cty.String, cty.Bool})},
+			origin: LocalOrigin{
 				Addr:        varAddr("tuple", idx(cty.NumberIntVal(2))),
 				Constraints: OriginConstraints{{OfType: cty.DynamicPseudoType}},
 			},
-			false,
+			expectedMatch: false,
 		},
 		{
-			"object attribute",
-			Target{Addr: varAddr("obj"), Type: cty.Object(map[string]cty.Type{"foo": cty.String})},
-			LocalOrigin{
+			name:   "object attribute",
+			target: Target{Addr: varAddr("obj"), Type: cty.Object(map[string]cty.Type{"foo": cty.String})},
+			origin: LocalOrigin{
 				Addr:        varAddr("obj", attr("foo")),
 				Constraints: OriginConstraints{{OfType: cty.String}},
 			},
-			true,
+			expectedMatch: true,
 		},
 		{
-			"object index by attribute name",
-			Target{Addr: varAddr("obj"), Type: cty.Object(map[string]cty.Type{"foo": cty.String})},
-			LocalOrigin{
+			name:   "object index by attribute name",
+			target: Target{Addr: varAddr("obj"), Type: cty.Object(map[string]cty.Type{"foo": cty.String})},
+			origin: LocalOrigin{
 				Addr:        varAddr("obj", idx(cty.StringVal("foo"))),
 				Constraints: OriginConstraints{{OfType: cty.String}},
 			},
-			true,
+			expectedMatch: true,
 		},
 		{
-			"object unknown attribute",
-			Target{Addr: varAddr("obj"), Type: cty.Object(map[string]cty.Type{"foo": cty.String})},
-			LocalOrigin{
+			name:   "object unknown attribute",
+			target: Target{Addr: varAddr("obj"), Type: cty.Object(map[string]cty.Type{"foo": cty.String})},
+			origin: LocalOrigin{
 				Addr:        varAddr("obj", attr("bar")),
 				Constraints: OriginConstraints{{OfType: cty.DynamicPseudoType}},
 			},
-			false,
+			expectedMatch: false,
 		},
 		{
-			"primitive type",
-			Target{Addr: varAddr("str"), Type: cty.String},
-			LocalOrigin{
+			name:   "primitive type",
+			target: Target{Addr: varAddr("str"), Type: cty.String},
+			origin: LocalOrigin{
 				Addr:        varAddr("str", idx(cty.NumberIntVal(0))),
 				Constraints: OriginConstraints{{OfType: cty.DynamicPseudoType}},
 			},
-			false,
+			expectedMatch: false,
 		},
 		{
-			"different target address",
-			Target{Addr: varAddr("other"), Type: cty.Map(cty.String)},
-			LocalOrigin{
+			name:   "different target address",
+			target: Target{Addr: varAddr("other"), Type: cty.Map(cty.String)},
+			origin: LocalOrigin{
 				Addr:        varAddr("plain", idx(cty.StringVal("k"))),
 				Constraints: OriginConstraints{{OfType: cty.String}},
 			},
-			false,
+			expectedMatch: false,
 		},
 		{
-			"local address",
-			Target{
+			name: "local address",
+			target: Target{
 				LocalAddr: lang.Address{lang.RootStep{Name: "self"}, attr("tags")},
 				Type:      cty.Map(cty.String),
 			},
-			LocalOrigin{
+			origin: LocalOrigin{
 				Addr: lang.Address{
 					lang.RootStep{Name: "self"},
 					attr("tags"),
@@ -368,22 +368,22 @@ func TestTarget_Matches_nestedType(t *testing.T) {
 				},
 				Constraints: OriginConstraints{{OfType: cty.String}},
 			},
-			true,
+			expectedMatch: true,
 		},
 		{
-			"target with nested targets",
-			Target{
+			name: "target with nested targets",
+			target: Target{
 				Addr: varAddr("obj"),
 				Type: cty.Object(map[string]cty.Type{"foo": cty.String}),
 				NestedTargets: Targets{
 					{Addr: varAddr("obj", attr("foo")), Type: cty.String},
 				},
 			},
-			LocalOrigin{
+			origin: LocalOrigin{
 				Addr:        varAddr("obj", attr("foo")),
 				Constraints: OriginConstraints{{OfType: cty.String}},
 			},
-			false,
+			expectedMatch: false,
 		},
 	}
 
